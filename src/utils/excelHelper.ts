@@ -9,6 +9,7 @@ import {
   ClassInfo,
   ReportSettings,
 } from '../types';
+import { formatBirthDate, normalizeDateToStorage } from './dateHelper';
 
 export function exportStudentsToExcel(students: Student[], className: string): void {
   const rows = students.map((s, idx) => ({
@@ -18,7 +19,8 @@ export function exportStudentsToExcel(students: Student[], className: string): v
     'NISN': s.nisn,
     'Jenis Kelamin (L/P)': s.jenisKelamin,
     'Tempat Lahir': s.tempatLahir,
-    'Tanggal Lahir (YYYY-MM-DD)': s.tanggalLahir,
+    'Tanggal Lahir (DD/MM/YYYY)': formatBirthDate(s.tanggalLahir),
+    'Tanggal Lahir': formatBirthDate(s.tanggalLahir),
     'Agama': s.agama,
     'Alamat': s.alamat,
     'Nama Ayah': s.namaAyah,
@@ -46,7 +48,8 @@ export function downloadStudentImportTemplate(): void {
       'NISN': '0123456789',
       'Jenis Kelamin (L/P)': 'L',
       'Tempat Lahir': 'Jakarta',
-      'Tanggal Lahir (YYYY-MM-DD)': '2014-05-12',
+      'Tanggal Lahir (DD/MM/YYYY)': '12/05/2014',
+      'Tanggal Lahir': '12/05/2014',
       'Agama': 'Islam',
       'Alamat': 'Jl. Pendidikan No. 10',
       'Nama Ayah': 'Bambang',
@@ -85,7 +88,13 @@ export async function parseStudentsFromExcel(file: File): Promise<Partial<Studen
             nisn: String(row['NISN'] || row['nisn'] || '').trim(),
             jenisKelamin: jk,
             tempatLahir: String(row['Tempat Lahir'] || row['tempatLahir'] || '-').trim(),
-            tanggalLahir: String(row['Tanggal Lahir (YYYY-MM-DD)'] || row['Tanggal Lahir'] || row['tanggalLahir'] || '2014-01-01').trim(),
+            tanggalLahir: normalizeDateToStorage(
+              row['Tanggal Lahir (DD/MM/YYYY)'] ||
+              row['Tanggal Lahir'] ||
+              row['Tanggal Lahir (YYYY-MM-DD)'] ||
+              row['tanggalLahir'] ||
+              '2014-01-01'
+            ),
             agama: String(row['Agama'] || row['agama'] || 'Islam').trim(),
             alamat: String(row['Alamat'] || row['alamat'] || '-').trim(),
             namaAyah: String(row['Nama Ayah'] || row['namaAyah'] || '-').trim(),

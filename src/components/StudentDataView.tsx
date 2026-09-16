@@ -19,6 +19,7 @@ import {
   downloadStudentImportTemplate,
   parseStudentsFromExcel,
 } from '../utils/excelHelper';
+import { formatBirthDate, parseDateToInput } from '../utils/dateHelper';
 
 interface StudentDataViewProps {
   students: Student[];
@@ -292,8 +293,8 @@ export const StudentDataView: React.FC<StudentDataViewProps> = ({
                       </span>
                     </td>
                     <td className="py-3 px-3 text-slate-600">
-                      <div>{s.tempatLahir}</div>
-                      <div className="text-[10px] text-slate-400">{s.tanggalLahir}</div>
+                      <div className="font-medium text-slate-700">{s.tempatLahir}</div>
+                      <div className="text-[11px] text-slate-500 font-mono">{formatBirthDate(s.tanggalLahir)}</div>
                     </td>
                     <td className="py-3 px-3 text-slate-600">
                       <div>Ayah: {s.namaAyah || '-'}</div>
@@ -472,13 +473,21 @@ export const StudentDataView: React.FC<StudentDataViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-medium text-slate-700 mb-1">Tanggal Lahir</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block font-medium text-slate-700">Tanggal Lahir</label>
+                    <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-mono">
+                      {formData.tanggalLahir ? formatBirthDate(formData.tanggalLahir) : 'dd/mm/yyyy'}
+                    </span>
+                  </div>
                   <input
                     type="date"
-                    value={formData.tanggalLahir}
+                    value={parseDateToInput(formData.tanggalLahir)}
                     onChange={(e) => setFormData((p) => ({ ...p, tanggalLahir: e.target.value }))}
                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    Format baku Indonesia: <span className="font-semibold text-slate-600">Tanggal-Bulan-Tahun (dd/mm/yyyy)</span>
+                  </p>
                 </div>
 
                 <div>

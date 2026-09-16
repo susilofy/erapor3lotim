@@ -1,5 +1,6 @@
 import React from 'react';
 import { Student, SchoolInfo, ReportSettings } from '../../types';
+import { formatBirthDate } from '../../utils/dateHelper';
 
 interface StudentBiodataPageProps {
   student: Student;
@@ -50,7 +51,7 @@ export const StudentBiodataPage: React.FC<StudentBiodataPageProps> = ({
                 <td className="w-60 py-1.5 font-semibold text-black">Tempat, Tanggal Lahir</td>
                 <td className="w-4 py-1.5 text-center text-black">:</td>
                 <td className="py-1.5 text-black">
-                  {student.tempatLahir}, {student.tanggalLahir}
+                  {student.tempatLahir ? `${student.tempatLahir}, ` : ''}{formatBirthDate(student.tanggalLahir)}
                 </td>
               </tr>
               <tr className="align-top">
