@@ -49,11 +49,16 @@ export function loadDatabaseFromStorage(): FullAppDatabase {
 
     let needsSave = false;
 
-    // Auto-update to SD Negeri 3 Loloan Timur if previously using placeholder school
+    // Enforce locked school name to SD Negeri 3 Loloan Timur
+    if (parsed.school.namaSekolah !== 'SD Negeri 3 Loloan Timur') {
+      parsed.school.namaSekolah = 'SD Negeri 3 Loloan Timur';
+      needsSave = true;
+    }
+
+    // Auto-update to SD Negeri 3 Loloan Timur defaults if previously using placeholder school
     if (
-      parsed.school.namaSekolah === 'SD NEGERI 1 NUSANTARA' ||
       parsed.school.npsn === '50102345' ||
-      !parsed.school.namaSekolah
+      !parsed.school.npsn
     ) {
       parsed.school = {
         ...parsed.school,
@@ -371,10 +376,15 @@ export function validateBackupJson(rawText: string): BackupValidationResult {
       return { isValid: false, errorMessage: 'File backup tidak memiliki Data Mata Pelajaran yang valid.' };
     }
 
+    // Always enforce locked school name
+    if (data.school) {
+      data.school.namaSekolah = 'SD Negeri 3 Loloan Timur';
+    }
+
     return {
       isValid: true,
       summary: {
-        namaSekolah: data.school.namaSekolah || 'Sekolah Tidak Diketahui',
+        namaSekolah: 'SD Negeri 3 Loloan Timur',
         namaKelas: data.classInfo?.namaKelas || 'Kelas',
         semester: data.classInfo?.semester || 1,
         tahunAjaran: data.classInfo?.tahunAjaran || '-',

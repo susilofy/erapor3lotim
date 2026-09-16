@@ -60,7 +60,13 @@ export default function App() {
 
   // State update handlers
   const handleUpdateSchool = (school: SchoolInfo) => {
-    setData((prev) => ({ ...prev, school }));
+    setData((prev) => ({
+      ...prev,
+      school: {
+        ...school,
+        namaSekolah: 'SD Negeri 3 Loloan Timur',
+      },
+    }));
   };
 
   const handleUpdateTeacher = (teacher: TeacherInfo) => {

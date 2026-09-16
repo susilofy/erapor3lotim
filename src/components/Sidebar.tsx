@@ -176,11 +176,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Footer info */}
-        <div className="p-3 border-t border-slate-800 bg-slate-950/60 text-[11px] text-slate-400 flex items-center justify-between">
-          <span>Versi 1.0 (A4 PDF)</span>
-          <span className="px-2 py-0.5 rounded-sm bg-emerald-950 text-emerald-400 border border-emerald-800/50 font-mono">
-            Guru Kelas
-          </span>
+        <div className="p-3 border-t border-slate-800 bg-slate-950/60 text-[11px] text-slate-400 space-y-1">
+          <div className="flex items-center justify-between">
+            <span>Versi 1.0 (A4 PDF)</span>
+            <span className="px-2 py-0.5 rounded-sm bg-emerald-950 text-emerald-400 border border-emerald-800/50 font-mono">
+              Guru Kelas
+            </span>
+          </div>
+          <div className="text-[10px] text-slate-500 pt-0.5">
+            Developer: Susilo Fitri Yatmoko
+          </div>
         </div>
       </aside>
     </>

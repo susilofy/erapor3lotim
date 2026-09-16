@@ -65,8 +65,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
             Selamat Datang, {db.teacher.namaGuru || 'Bapak/Ibu Guru'}!
           </h1>
           <p className="text-blue-100 text-sm mt-2 leading-relaxed">
-            Aplikasi pengolahan rapor kelas {db.classInfo.namaKelas} semester {semester} di {db.school.namaSekolah}.
-            Hitung nilai akhir dan capaian kompetensi secara otomatis, siap cetak dalam standar A4.
+            Aplikasi Pengolahan Rapor SD Negeri 3 Loloan Timur
+            <span className="block mt-2.5">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/10 backdrop-blur-xs text-white text-xs font-semibold border border-white/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span>Developer: Susilo Fitri Yatmoko</span>
+              </span>
+            </span>
           </p>
 
           <div className="mt-5 flex flex-wrap gap-3">
