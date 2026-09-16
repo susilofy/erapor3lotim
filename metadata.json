@@ -1,6 +1,6 @@
 {
-  "name": "Remix Aplikasi Rapor SD",
-  "description": "Aplikasi pengolahan dan pencetakan rapor SD Kurikulum Merdeka modern, lengkap, dan siap cetak A4 untuk guru kelas.",
+  "name": "Aplikasi Rapor SD Negeri 3 Loloan Timur",
+  "description": "Aplikasi pengolahan dan pencetakan rapor SD Negeri 3 Loloan Timur Kurikulum Merdeka modern, lengkap, dan siap cetak A4.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
