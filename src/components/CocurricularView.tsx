@@ -56,7 +56,7 @@ export const CocurricularView: React.FC<CocurricularViewProps> = ({
       },
     };
     onUpdateCocurricular(updated);
-    setStatusMessage('Data Kokurikuler (P5) berhasil disimpan!');
+    setStatusMessage('Data Kokurikuler berhasil disimpan!');
     setTimeout(() => setStatusMessage(null), 3000);
   };
 
@@ -67,7 +67,7 @@ export const CocurricularView: React.FC<CocurricularViewProps> = ({
         <div>
           <h1 className="text-xl font-bold text-slate-800 flex items-center space-x-2">
             <Sparkles className="w-5 h-5 text-purple-600" />
-            <span>Kokurikuler / Projek P5 - Semester {semester}</span>
+            <span>Kokurikuler - Semester {semester}</span>
           </h1>
           <p className="text-xs text-slate-500 mt-1">
             Kegiatan kokurikuler mencakup projek penguatan profil pelajar Pancasila beserta narasi perkembangan karakter siswa.

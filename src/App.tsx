@@ -207,7 +207,7 @@ export default function App() {
     setData((prev) => ({ ...prev, scores }));
   };
 
-  // Cocurricular P5
+  // Cocurricular
   const handleUpdateCocurricular = (cocurricular: CocurricularDatabase) => {
     setData((prev) => ({ ...prev, cocurricular }));
   };

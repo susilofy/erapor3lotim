@@ -64,7 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       title: 'PENGEMBANGAN SISWA',
       items: [
-        { id: 'kokurikuler', label: 'Kokurikuler (P5)', icon: Sparkles },
+        { id: 'kokurikuler', label: 'Kokurikuler', icon: Sparkles },
         { id: 'ekstrakurikuler', label: 'Ekstrakurikuler', icon: Trophy },
         { id: 'absensi', label: 'Rekap Absensi', icon: CalendarCheck },
         { id: 'catatan', label: 'Catatan Wali Kelas', icon: MessageSquare },

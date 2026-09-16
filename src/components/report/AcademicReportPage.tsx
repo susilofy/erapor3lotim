@@ -302,7 +302,7 @@ export const AcademicReportPage: React.FC<AcademicReportPageProps> = ({
       style={{ boxSizing: 'border-box' }}
     >
       <div className="space-y-2.5 flex-1 flex flex-col text-black">
-        {/* Section B: Kokurikuler P5 (Jika ada tema) */}
+        {/* Section B: Kokurikuler (Jika ada tema) */}
         {currentProject?.tema && (
           <div className="space-y-1 font-sans text-black">
             <h3 className="font-bold text-xs text-black uppercase font-serif">

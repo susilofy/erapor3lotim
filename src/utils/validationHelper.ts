@@ -117,14 +117,14 @@ export function checkReportCompleteness(db: FullAppDatabase, semester: number): 
     category: 'nilai',
   });
 
-  // 7. Kokurikuler (P5)
+  // 7. Kokurikuler
   const isCocurricularComplete = Boolean(
     currentCocurricular?.tema?.trim() &&
     activeStudents.every((s) => Boolean(currentCocurricular.capaianSiswa[s.id]?.trim()))
   );
   items.push({
     id: 'cocurricular',
-    label: 'Kokurikuler (Projek P5)',
+    label: 'Kokurikuler',
     isComplete: isCocurricularComplete,
     details: isCocurricularComplete
       ? 'Tema dan capaian seluruh siswa terisi'

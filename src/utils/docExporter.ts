@@ -199,7 +199,7 @@ export function generateStudentReportDocHtml(
         </tr>
       </table>
 
-      <!-- Bagian B: Kokurikuler P5 / PPA -->
+      <!-- Bagian B: Kokurikuler -->
       <div style="margin-bottom: 12px; font-family: Arial, sans-serif;">
         <div style="font-family: 'Times New Roman', serif; font-size: 10pt; font-weight: bold; text-transform: uppercase; margin-bottom: 4px;">
           B. Projek Penguatan Profil Pelajar Pancasila (Kokurikuler)

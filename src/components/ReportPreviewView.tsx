@@ -194,7 +194,7 @@ export const ReportPreviewView: React.FC<ReportPreviewViewProps> = ({
                 cell.style.setProperty('color', '#000000', 'important');
               });
 
-              // 3. Calibrate report section boxes (Kokurikuler P5, Catatan Wali Kelas, Keputusan Akhir)
+              // 3. Calibrate report section boxes (Kokurikuler, Catatan Wali Kelas, Keputusan Akhir)
               const boxes = clonedDoc.querySelectorAll<HTMLElement>(
                 '.border-\\[0\\.5px\\], .border-\\[0\\.75px\\]'
               );
