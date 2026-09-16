@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+  --color-blue-800: #1e40af;
+  --color-blue-900: #1e3a8a;
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-amber-500: #f59e0b;
+}
+
+@layer utilities {
+  @media print {
+    @page {
+      size: A4 portrait;
+      margin: 1.25cm 1.25cm 1.25cm 1.25cm !important;
+    }
+
+    html, body {
+      background: #ffffff !important;
+      color: #000000 !important;
+      overflow: visible !important;
+      height: auto !important;
+      min-height: auto !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    /* Prevent parent containers with overflow from clipping pages */
+    div, main, section {
+      overflow: visible !important;
+      max-height: none !important;
+    }
+
+    .report-page {
+      page-break-after: always;
+      break-after: page;
+      width: 100% !important;
+      min-height: auto !important;
+      box-shadow: none !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      color: #000000 !important;
+      background: #ffffff !important;
+    }
+
+    .report-page * {
+      color: #000000 !important;
+    }
+
+    .report-page table,
+    .report-page th,
+    .report-page td,
+    .report-page tr {
+      border-color: #000000 !important;
+    }
+
+    .leger-sheet {
+      page-break-after: always;
+      break-after: page;
+      width: 100% !important;
+      min-height: auto !important;
+      box-shadow: none !important;
+      border: none !important;
+      padding: 6mm 8mm !important;
+      margin: 0 !important;
+    }
+
+    .no-print {
+      display: none !important;
+    }
+  }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+  }
+
+  .report-table-thin {
+    border-collapse: collapse;
+    border: 0.75px solid #000000;
+  }
+
+  .report-table-thin th,
+  .report-table-thin td {
+    border: 0.75px solid #000000;
+  }
+}

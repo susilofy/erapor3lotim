@@ -1,0 +1,8 @@
+{
+  "name": "Remix Aplikasi Rapor SD",
+  "description": "Aplikasi pengolahan dan pencetakan rapor SD Kurikulum Merdeka modern, lengkap, dan siap cetak A4 untuk guru kelas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
