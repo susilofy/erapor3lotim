@@ -699,3 +699,243 @@ export function exportLegerToExcel(options: {
   const fileName = `Rekap_Nilai_Leger_${classInfo.namaKelas.replace(/\s+/g, '_')}_Semester_${semester}_${new Date().toISOString().slice(0, 10)}.xlsx`;
   XLSX.writeFile(workbook, fileName);
 }
+
+// ==========================================
+// LINGKUP MATERI EXPORT & IMPORT
+// ==========================================
+
+export function exportLearningScopesToExcel(
+  learningScopes: LingkupMateri[],
+  subjects: Subject[],
+  semester: 1 | 2,
+  subjectFilterId?: string
+): void {
+  const subjectMap = new Map(subjects.map((s) => [s.id, s]));
+
+  const filteredScopes = learningScopes.filter((lm) => {
+    const isSemMatch = lm.semester === semester;
+    if (!isSemMatch) return false;
+    if (subjectFilterId && subjectFilterId !== 'all') {
+      return lm.subjectId === subjectFilterId;
+    }
+    return true;
+  });
+
+  // Sort by subject name, then kode
+  filteredScopes.sort((a, b) => {
+    const subA = subjectMap.get(a.subjectId)?.nama || '';
+    const subB = subjectMap.get(b.subjectId)?.nama || '';
+    if (subA !== subB) return subA.localeCompare(subB);
+    return a.kode.localeCompare(b.kode, undefined, { numeric: true });
+  });
+
+  const rows = filteredScopes.map((lm, idx) => {
+    const sub = subjectMap.get(lm.subjectId);
+    return {
+      'No': idx + 1,
+      'Mata Pelajaran': sub?.nama || lm.subjectId,
+      'Kode LM': lm.kode,
+      'Judul / Capaian Pembelajaran': lm.judul,
+      'KKTP': lm.kktp,
+      'Semester': lm.semester,
+      'Status': lm.isActive ? 'Aktif' : 'Non-Aktif',
+    };
+  });
+
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+
+  // Set column widths
+  worksheet['!cols'] = [
+    { wch: 6 },  // No
+    { wch: 28 }, // Mata Pelajaran
+    { wch: 12 }, // Kode LM
+    { wch: 60 }, // Judul / Capaian Pembelajaran
+    { wch: 10 }, // KKTP
+    { wch: 12 }, // Semester
+    { wch: 12 }, // Status
+  ];
+
+  const workbook = XLSX.utils.book_new();
+  const sheetName = `LM_Sem_${semester}`.slice(0, 31);
+  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+
+  const subjectNamePart = subjectFilterId && subjectFilterId !== 'all'
+    ? (subjectMap.get(subjectFilterId)?.nama || 'Mapel').replace(/[^a-zA-Z0-9]/g, '_')
+    : 'Semua_Mapel';
+
+  const fileName = `Lingkup_Materi_${subjectNamePart}_Sem_${semester}_${new Date().toISOString().slice(0, 10)}.xlsx`;
+  XLSX.writeFile(workbook, fileName);
+}
+
+export function downloadLearningScopeImportTemplate(
+  subjects: Subject[],
+  semester: 1 | 2,
+  selectedSubjectId?: string
+): void {
+  const activeSubjects = subjects.filter((s) => s.isActive);
+  const selectedSub = activeSubjects.find((s) => s.id === selectedSubjectId) || activeSubjects[0];
+
+  const templateRows = [
+    {
+      'Mata Pelajaran': selectedSub?.nama || 'Pendidikan Pancasila',
+      'Kode LM': 'LM 1',
+      'Judul / Capaian Pembelajaran': 'Memahami nilai-nilai Pancasila dan penerapannya dalam kehidupan sehari-hari',
+      'KKTP': selectedSub?.kktp || 75,
+      'Semester': semester,
+    },
+    {
+      'Mata Pelajaran': selectedSub?.nama || 'Pendidikan Pancasila',
+      'Kode LM': 'LM 2',
+      'Judul / Capaian Pembelajaran': 'Mengenal norma, hak, dan kewajiban sebagai anggota keluarga dan warga sekolah',
+      'KKTP': selectedSub?.kktp || 75,
+      'Semester': semester,
+    },
+    {
+      'Mata Pelajaran': activeSubjects[1]?.nama || 'Bahasa Indonesia',
+      'Kode LM': 'LM 1',
+      'Judul / Capaian Pembelajaran': 'Menyimak, memahami informasi teks bacaan, dan menceritakan kembali secara runut',
+      'KKTP': activeSubjects[1]?.kktp || 75,
+      'Semester': semester,
+    },
+    {
+      'Mata Pelajaran': activeSubjects[2]?.nama || 'Matematika',
+      'Kode LM': 'LM 1',
+      'Judul / Capaian Pembelajaran': 'Memahami operasi hitung penjumlahan dan pengurangan bilangan cacah sampai 1.000',
+      'KKTP': activeSubjects[2]?.kktp || 75,
+      'Semester': semester,
+    },
+  ];
+
+  const worksheet = XLSX.utils.json_to_sheet(templateRows);
+  worksheet['!cols'] = [
+    { wch: 28 }, // Mata Pelajaran
+    { wch: 12 }, // Kode LM
+    { wch: 65 }, // Judul / Capaian Pembelajaran
+    { wch: 10 }, // KKTP
+    { wch: 12 }, // Semester
+  ];
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Template LM');
+  XLSX.writeFile(workbook, `Template_Import_Lingkup_Materi_Sem_${semester}.xlsx`);
+}
+
+export interface ParsedLingkupMateri {
+  subjectId: string;
+  kode: string;
+  judul: string;
+  kktp: number;
+  semester: 1 | 2;
+  isActive: boolean;
+}
+
+export async function parseLearningScopesFromExcel(
+  file: File,
+  subjects: Subject[],
+  currentSemester: 1 | 2,
+  defaultSubjectId?: string
+): Promise<ParsedLingkupMateri[]> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const rawRows: Record<string, any>[] = XLSX.utils.sheet_to_json(worksheet);
+
+        const activeSubjects = subjects.filter((s) => s.isActive);
+        const defaultSub = subjects.find((s) => s.id === defaultSubjectId) || activeSubjects[0];
+
+        const findSubject = (inputName?: any): Subject => {
+          if (!inputName) return defaultSub;
+          const clean = String(inputName).trim().toLowerCase();
+
+          // 1. Exact match by nama
+          const exact = subjects.find((s) => s.nama.toLowerCase() === clean);
+          if (exact) return exact;
+
+          // 2. ID match
+          const byId = subjects.find((s) => s.id.toLowerCase() === clean);
+          if (byId) return byId;
+
+          // 3. Partial / substring match
+          const partial = subjects.find((s) => {
+            const sName = s.nama.toLowerCase();
+            return sName.includes(clean) || clean.includes(sName);
+          });
+          if (partial) return partial;
+
+          return defaultSub;
+        };
+
+        const result: ParsedLingkupMateri[] = [];
+
+        rawRows.forEach((row) => {
+          const rawSubName =
+            row['Mata Pelajaran'] ||
+            row['Mapel'] ||
+            row['Nama Mata Pelajaran'] ||
+            row['MataPelajaran'] ||
+            row['Subject'];
+          const matchedSub = findSubject(rawSubName);
+
+          const judul = String(
+            row['Judul / Capaian Pembelajaran'] ||
+            row['Judul Materi'] ||
+            row['Judul'] ||
+            row['Deskripsi'] ||
+            row['Lingkup Materi'] ||
+            row['Capaian Pembelajaran'] ||
+            row['Materi'] ||
+            row['Tujuan Pembelajaran'] ||
+            ''
+          ).trim();
+
+          // Skip empty rows
+          if (!judul) return;
+
+          let kode = String(
+            row['Kode LM'] ||
+            row['Kode'] ||
+            row['LM'] ||
+            row['KodeLM'] ||
+            row['Kode Materi'] ||
+            ''
+          ).trim();
+
+          if (!kode) {
+            const countForSub = result.filter((r) => r.subjectId === matchedSub.id).length;
+            kode = `LM ${countForSub + 1}`;
+          }
+
+          const rawKktp = Number(
+            row['KKTP'] || row['KKM'] || row['Nilai Minimal'] || matchedSub.kktp || 75
+          );
+          const kktp = isNaN(rawKktp)
+            ? (matchedSub.kktp || 75)
+            : Math.max(0, Math.min(100, rawKktp));
+
+          const rawSem = Number(row['Semester'] || row['Sem'] || currentSemester);
+          const sem: 1 | 2 = (rawSem === 2 || rawSem === 1) ? (rawSem as 1 | 2) : currentSemester;
+
+          result.push({
+            subjectId: matchedSub.id,
+            kode,
+            judul,
+            kktp,
+            semester: sem,
+            isActive: true,
+          });
+        });
+
+        resolve(result);
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.onerror = (err) => reject(err);
+    reader.readAsArrayBuffer(file);
+  });
+}
