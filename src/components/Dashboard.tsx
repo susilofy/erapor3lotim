@@ -18,8 +18,9 @@ import {
   ArrowRight,
   ShieldCheck,
   ExternalLink,
+  Laptop,
 } from 'lucide-react';
-import { FullAppDatabase, ActiveTab } from '../types';
+import { FullAppDatabase, ActiveTab, TeacherProfileMeta } from '../types';
 import { CompletenessReport } from '../utils/validationHelper';
 
 interface DashboardProps {
@@ -27,6 +28,8 @@ interface DashboardProps {
   semester: 1 | 2;
   setActiveTab: (tab: ActiveTab) => void;
   completeness: CompletenessReport;
+  onOpenProfileSwitcher?: () => void;
+  activeProfile?: TeacherProfileMeta;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -34,11 +37,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
   semester,
   setActiveTab,
   completeness,
+  onOpenProfileSwitcher,
+  activeProfile,
 }) => {
   const activeStudents = db.students.filter((s) => s.status === 'Aktif');
   const activeSubjects = db.subjects.filter((s) => s.isActive);
 
   const quickButtons = [
+    { label: 'Ganti Profil (1-6 Guru)', tab: 'profil' as ActiveTab, icon: Laptop, color: 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-indigo-200' },
     { label: 'Kelola Siswa', tab: 'siswa' as ActiveTab, icon: Users, color: 'bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200' },
     { label: 'Input Nilai', tab: 'nilai' as ActiveTab, icon: FileSpreadsheet, color: 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200' },
     { label: 'Capaian Kompetensi', tab: 'capaian' as ActiveTab, icon: Award, color: 'bg-amber-50 text-amber-700 hover:bg-amber-100 border-amber-200' },
@@ -95,6 +101,38 @@ export const Dashboard: React.FC<DashboardProps> = ({
         {/* Decorative badge in background */}
         <div className="absolute right-4 -bottom-6 opacity-10 pointer-events-none hidden md:block">
           <School className="w-64 h-64 text-white" />
+        </div>
+      </div>
+
+      {/* Multi-Profile Class Notice Card (1 Komputer untuk 6 Guru) */}
+      <div className="bg-white rounded-xl border border-blue-200 p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-blue-50/70 via-white to-indigo-50/50">
+        <div className="flex items-center space-x-3.5">
+          <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center font-extrabold text-base shadow-xs shrink-0">
+            {db.classInfo.tingkat || 1}
+          </div>
+          <div>
+            <div className="flex items-center space-x-2">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900">
+                Profil Aktif: {db.classInfo.namaKelas} ({db.classInfo.fase})
+              </h2>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                Slot Multi-Guru (1-6 Guru)
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 mt-1">
+              Guru / Wali: <strong className="text-slate-800">{db.teacher.namaGuru || '(Nama guru belum diatur)'}</strong> • 
+              Data siswa ({activeStudents.length} siswa) & nilai rapor aman tersimpan mandiri pada profil ini.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2 shrink-0">
+          <button
+            onClick={onOpenProfileSwitcher || (() => setActiveTab('profil'))}
+            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer"
+          >
+            <Laptop className="w-4 h-4" />
+            <span>Ganti Profil / Kelas</span>
+          </button>
         </div>
       </div>
 

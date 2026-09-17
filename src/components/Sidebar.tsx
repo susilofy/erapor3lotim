@@ -18,8 +18,9 @@ import {
   Database,
   ChevronRight,
   PanelLeftClose,
+  Laptop,
 } from 'lucide-react';
-import { ActiveTab } from '../types';
+import { ActiveTab, TeacherProfileMeta } from '../types';
 
 interface SidebarProps {
   activeTab: ActiveTab;
@@ -27,6 +28,8 @@ interface SidebarProps {
   semester: 1 | 2;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  activeProfile?: TeacherProfileMeta;
+  onOpenProfileSwitcher?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -35,12 +38,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
   semester,
   isOpen,
   setIsOpen,
+  activeProfile,
+  onOpenProfileSwitcher,
 }) => {
   const menuSections = [
     {
       title: 'UTAMA',
       items: [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'profil', label: 'Ganti Profil / Kelas', icon: Laptop, badge: '1-6 Guru' },
       ],
     },
     {
@@ -121,6 +127,35 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <PanelLeftClose className="w-5 h-5" />
           </button>
         </div>
+
+        {/* Active Profile Quick Card */}
+        {activeProfile && (
+          <div className="mx-3 mt-3 p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/80 flex items-center justify-between">
+            <div className="flex items-center space-x-2.5 overflow-hidden">
+              <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
+                {activeProfile.nomor}
+              </div>
+              <div className="overflow-hidden">
+                <div className="text-[11px] font-bold text-white truncate">
+                  {activeProfile.kelas}
+                </div>
+                <div className="text-[10px] text-slate-400 truncate">
+                  {activeProfile.namaGuru || 'Guru Kelas'}
+                </div>
+              </div>
+            </div>
+            {onOpenProfileSwitcher && (
+              <button
+                type="button"
+                onClick={onOpenProfileSwitcher}
+                className="px-2 py-1 text-[10px] font-bold rounded bg-blue-500/20 text-blue-300 hover:bg-blue-600 hover:text-white border border-blue-500/30 transition-colors shrink-0"
+                title="Ganti Profil Guru"
+              >
+                Ganti
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Navigation items */}
         <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6 custom-scrollbar">

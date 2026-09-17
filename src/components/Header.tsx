@@ -10,6 +10,8 @@ import {
   Database,
   PanelLeftClose,
   PanelLeft,
+  Users,
+  ChevronDown,
 } from 'lucide-react';
 import { FullAppDatabase, ActiveTab } from '../types';
 
@@ -21,6 +23,7 @@ interface HeaderProps {
   onToggleSidebar: () => void;
   isSidebarOpen: boolean;
   completenessPercent: number;
+  onOpenProfileSwitcher: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -31,6 +34,7 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleSidebar,
   isSidebarOpen,
   completenessPercent,
+  onOpenProfileSwitcher,
 }) => {
   return (
     <header className="sticky top-0 z-30 h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between shadow-xs print:hidden">
@@ -74,7 +78,30 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Right section: Semester Toggle & Quick Actions */}
-      <div className="flex items-center space-x-3 sm:space-x-4">
+      <div className="flex items-center space-x-2 sm:space-x-3">
+        {/* Tombol Ganti Profil / Kelas */}
+        <button
+          id="btn-header-switch-profile"
+          onClick={onOpenProfileSwitcher}
+          className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border border-blue-200 bg-blue-50/70 hover:bg-blue-100 hover:border-blue-400 transition-all cursor-pointer group"
+          title="Ganti Profil Guru / Kelas (1 - 6 Guru)"
+        >
+          <div className="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center text-[11px] font-bold shadow-2xs">
+            {db.classInfo.tingkat || 1}
+          </div>
+          <div className="text-left hidden sm:block">
+            <div className="text-[10px] text-blue-600 font-semibold leading-none">
+              Profil Guru
+            </div>
+            <div className="text-xs font-bold text-slate-800 leading-tight">
+              {db.classInfo.namaKelas}
+            </div>
+          </div>
+          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-sm bg-blue-600 text-white group-hover:bg-blue-700 transition-colors">
+            Ganti
+          </span>
+        </button>
+
         {/* Semester 1 / 2 Selector */}
         <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
           <button

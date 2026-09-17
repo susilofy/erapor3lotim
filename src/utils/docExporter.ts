@@ -313,11 +313,11 @@ export function generateStudentReportDocHtml(
         <div style="font-family: 'Times New Roman', serif; font-size: 10pt; font-weight: bold; text-transform: uppercase; margin-bottom: 4px;">
           ${semester === 2 ? 'G. Tanggapan Orang Tua / Wali Murid' : 'F. Tanggapan Orang Tua / Wali Murid'}
         </div>
-        <div style="border: 0.50pt solid #000; min-height: 70px; padding: 6px 8px;">
-          <div style="border-bottom: 1px dotted #888; height: 16px;"></div>
-          <div style="border-bottom: 1px dotted #888; height: 16px;"></div>
-          <div style="border-bottom: 1px dotted #888; height: 16px;"></div>
-          <div style="border-bottom: 1px dotted #888; height: 16px;"></div>
+        <div style="border: 0.50pt solid #000; min-height: 92px; padding: 8px 10px;">
+          <div style="border-bottom: 1px dotted #666; height: 20px;"></div>
+          <div style="border-bottom: 1px dotted #666; height: 20px;"></div>
+          <div style="border-bottom: 1px dotted #666; height: 20px;"></div>
+          <div style="border-bottom: 1px dotted #666; height: 20px;"></div>
         </div>
       </div>
 

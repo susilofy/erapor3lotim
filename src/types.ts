@@ -156,8 +156,22 @@ export interface FullAppDatabase {
   promotions: PromotionDatabase;
 }
 
+export interface TeacherProfileMeta {
+  id: string; // e.g. 'profil-1' s.d. 'profil-6'
+  nomor: number; // 1 to 6
+  namaProfil: string; // e.g. 'Guru Kelas 1'
+  kelas: string; // e.g. 'Kelas I'
+  tingkat: number; // 1 to 6
+  fase: 'Fase A' | 'Fase B' | 'Fase C';
+  namaGuru: string;
+  nipGuru: string;
+  warnaTema: 'blue' | 'emerald' | 'amber' | 'purple' | 'rose' | 'indigo';
+  terakhirDiubah?: string;
+}
+
 export type ActiveTab =
   | 'dashboard'
+  | 'profil'
   | 'sekolah'
   | 'guru'
   | 'kelas'

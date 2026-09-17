@@ -16,6 +16,7 @@ import {
   TeacherInfo,
   ClassInfo,
   ReportSettings,
+  TeacherProfileMeta,
 } from './types';
 import {
   loadDatabase,
@@ -25,6 +26,13 @@ import {
   resetDatabase,
   clearTeacherStudentLearningScopeData,
 } from './utils/storageHelper';
+import {
+  getActiveProfileId,
+  getActiveProfile,
+  setActiveProfileId,
+  loadDatabaseForProfile,
+  saveDatabaseForProfile,
+} from './utils/profileStorage';
 import { checkReportCompleteness } from './utils/validationHelper';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
@@ -45,16 +53,43 @@ import { StudentStatusView } from './components/StudentStatusView';
 import { ScoreRecapView } from './components/ScoreRecapView';
 import { ReportPreviewView } from './components/ReportPreviewView';
 import { DatabaseBackupView } from './components/DatabaseBackupView';
+import { ProfileManagementView } from './components/ProfileManagementView';
+import { ProfileSwitcherModal } from './components/ProfileSwitcherModal';
 
 export default function App() {
-  const [data, setData] = useState<FullAppDatabase>(() => loadDatabase());
+  const [activeProfileId, setActiveProfileIdState] = useState<string>(() => getActiveProfileId());
+  const [activeProfile, setActiveProfile] = useState<TeacherProfileMeta>(() => getActiveProfile());
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [data, setData] = useState<FullAppDatabase>(() => loadDatabaseForProfile(getActiveProfileId()));
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // Sync to localStorage
+  // Sync to profile-specific localStorage
   useEffect(() => {
-    saveDatabase(data);
-  }, [data]);
+    saveDatabaseForProfile(activeProfileId, data);
+    setActiveProfile(getActiveProfile());
+  }, [data, activeProfileId]);
+
+  // Handle Switching Profile (1-6 Guru)
+  const handleSwitchProfile = (newProfileId: string) => {
+    // Save current profile data before switching
+    saveDatabaseForProfile(activeProfileId, data);
+
+    // Switch active profile ID in storage & state
+    setActiveProfileId(newProfileId);
+    setActiveProfileIdState(newProfileId);
+
+    // Load new profile database
+    const newDb = loadDatabaseForProfile(newProfileId);
+    setData(newDb);
+    setActiveProfile(getActiveProfile());
+  };
+
+  const handleRefreshProfileData = () => {
+    const refreshed = loadDatabaseForProfile(activeProfileId);
+    setData(refreshed);
+    setActiveProfile(getActiveProfile());
+  };
 
   const completeness = checkReportCompleteness(data, data.classInfo.semester);
 
@@ -281,6 +316,7 @@ export default function App() {
         onToggleSidebar={() => setIsSidebarOpen((p) => !p)}
         isSidebarOpen={isSidebarOpen}
         completenessPercent={completeness.percent}
+        onOpenProfileSwitcher={() => setIsProfileModalOpen(true)}
       />
 
       <div className="flex-1 flex overflow-hidden">
@@ -291,6 +327,8 @@ export default function App() {
           semester={data.classInfo.semester}
           isOpen={isSidebarOpen}
           setIsOpen={setIsSidebarOpen}
+          activeProfile={activeProfile}
+          onOpenProfileSwitcher={() => setIsProfileModalOpen(true)}
         />
 
         {/* Main Content Area */}
@@ -305,6 +343,16 @@ export default function App() {
               semester={data.classInfo.semester}
               setActiveTab={setActiveTab}
               completeness={completeness}
+              onOpenProfileSwitcher={() => setIsProfileModalOpen(true)}
+              activeProfile={activeProfile}
+            />
+          )}
+
+          {activeTab === 'profil' && (
+            <ProfileManagementView
+              activeProfileId={activeProfileId}
+              onSelectProfile={handleSwitchProfile}
+              onRefreshData={handleRefreshProfileData}
             />
           )}
 
@@ -460,6 +508,15 @@ export default function App() {
           )}
         </main>
       </div>
+
+      {/* Modal Pemilihan Profil Guru / Kelas (1 - 6 Guru) */}
+      <ProfileSwitcherModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        activeProfileId={activeProfileId}
+        onSelectProfile={handleSwitchProfile}
+        onRefreshData={handleRefreshProfileData}
+      />
     </div>
   );
 }

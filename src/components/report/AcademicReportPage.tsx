@@ -422,17 +422,15 @@ export const AcademicReportPage: React.FC<AcademicReportPageProps> = ({
         )}
 
         {/* Section G/F: Tanggapan Orang Tua / Wali Murid */}
-        <div className="space-y-1 font-sans text-black">
+        <div className="space-y-1.5 font-sans text-black">
           <h3 className="font-bold text-xs text-black uppercase font-serif">
             {semester === 2 ? 'G. Tanggapan Orang Tua / Wali Murid' : 'F. Tanggapan Orang Tua / Wali Murid'}
           </h3>
-          <div className="border-[0.75px] border-black p-2.5 rounded-xs min-h-[70px] bg-slate-50/10">
-            <div className="space-y-2.5 pt-0.5">
-              <div className="border-b border-dotted border-black h-1.5"></div>
-              <div className="border-b border-dotted border-black h-1.5"></div>
-              <div className="border-b border-dotted border-black h-1.5"></div>
-              <div className="border-b border-dotted border-black h-1.5"></div>
-            </div>
+          <div className="border-[0.75px] border-black px-3 py-2 rounded-xs min-h-[92px] bg-slate-50/10 flex flex-col justify-around">
+            <div className="border-b border-dotted border-black/80 h-5"></div>
+            <div className="border-b border-dotted border-black/80 h-5"></div>
+            <div className="border-b border-dotted border-black/80 h-5"></div>
+            <div className="border-b border-dotted border-black/80 h-5"></div>
           </div>
         </div>
       </div>
